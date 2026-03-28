@@ -165,10 +165,19 @@ function ArtistCard({
       <div>
         <button
           onClick={() => setExpanded((v) => !v)}
-          className="font-pixel text-xs text-arcade-yellow hover:text-white transition-colors flex items-center gap-2 mb-2"
+          className="group font-pixel text-xs text-arcade-yellow hover:text-white transition-colors flex items-center gap-2 mb-2"
         >
-          <span>{expanded ? "▼" : "▶"}</span>
-          <span>TIMELINE.LOG</span>
+          <span
+            style={{
+              display: "inline-block",
+              transition: "transform 0.3s ease",
+              transform: expanded ? "rotate(90deg)" : "rotate(0deg)",
+              animation: expanded ? "none" : "nudgeRight 1.2s ease-in-out infinite",
+            }}
+          >
+            ▶
+          </span>
+          <span className="underline underline-offset-4 decoration-dotted">TIMELINE.LOG</span>
         </button>
         <div
           className={`overflow-hidden transition-all duration-300 ${

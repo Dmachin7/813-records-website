@@ -26,12 +26,12 @@ const RELEASES: Release[] = [
   {
     title: "MOOD SWINGS",
     artist: "PRINCE KREED",
-    type: "ALBUM",
+    type: "DEBUT ALBUM",
     year: "2026",
     status: "COMING SOON",
     streamUrl: "https://open.spotify.com/artist/4nbBP1Y7ZGajRoMiBonII8",
     description:
-      "Debut album. R&B, Rap, and Pop blended with Prince Kreed's signature romantic aesthetic.",
+      "The debut. R&B, Rap, and Pop — the full range of Prince Kreed's romantic aesthetic in one project. Everything he's been building toward.",
   },
   {
     title: "PERFECT PRINCESS",
@@ -63,24 +63,53 @@ function ReleaseCard({
   isVisible: boolean;
   delay: number;
 }) {
+  const isComingSoon = release.status === "COMING SOON";
+
   return (
     <div
-      className="pixel-card flex flex-col gap-4 h-full group"
+      className="flex flex-col gap-4 h-full"
       style={{
         opacity: isVisible ? 1 : 0,
         transform: isVisible ? "translateY(0)" : "translateY(40px)",
         transition: `all 0.7s ease ${delay}ms`,
+        background: "#1a1a1a",
+        padding: "1.5rem",
+        boxShadow: isComingSoon
+          ? "0 -4px 0 0 #FFD700, 0 4px 0 0 #FFD700, -4px 0 0 0 #FFD700, 4px 0 0 0 #FFD700, -4px -4px 0 0 #FFD700, 4px -4px 0 0 #FFD700, -4px 4px 0 0 #FFD700, 4px 4px 0 0 #FFD700"
+          : "0 -4px 0 0 #FFD700, 0 4px 0 0 #FFD700, -4px 0 0 0 #FFD700, 4px 0 0 0 #FFD700, -4px -4px 0 0 #FFD700, 4px -4px 0 0 #FFD700, -4px 4px 0 0 #FFD700, 4px 4px 0 0 #FFD700",
+        animation: isComingSoon ? "borderGlow 2s ease-in-out infinite" : undefined,
       }}
     >
+      {/* COMING SOON announcement banner */}
+      {isComingSoon && (
+        <div
+          className="font-pixel text-arcade-black text-center py-1.5"
+          style={{
+            fontSize: "0.5rem",
+            letterSpacing: "0.15em",
+            background: "repeating-linear-gradient(90deg, #FFD700 0px, #FFD700 12px, #ff8c00 12px, #ff8c00 16px)",
+            animation: "comingSoonPulse 2s ease-in-out infinite",
+            marginBottom: "0.25rem",
+          }}
+        >
+          ★ COMING LATER THIS YEAR ★
+        </div>
+      )}
+
       {/* Header row */}
       <div className="flex items-start justify-between gap-2">
         <div>
           <h3
             className="font-pixel text-arcade-yellow mb-1"
             style={{
-              fontSize: "clamp(0.65rem, 2vw, 0.85rem)",
-              textShadow: "0 0 6px #FFD700",
+              fontSize: isComingSoon
+                ? "clamp(0.75rem, 2.5vw, 1rem)"
+                : "clamp(0.65rem, 2vw, 0.85rem)",
+              textShadow: isComingSoon
+                ? "0 0 8px #FFD700, 0 0 16px rgba(255,215,0,0.4)"
+                : "0 0 6px #FFD700",
               lineHeight: "1.5",
+              animation: isComingSoon ? "neonPulse 2.5s ease-in-out infinite" : undefined,
             }}
           >
             {release.title}
@@ -91,12 +120,12 @@ function ReleaseCard({
         </div>
 
         {/* Status badge */}
-        {release.status === "COMING SOON" ? (
+        {isComingSoon ? (
           <span
             className="font-pixel px-2 py-1 text-arcade-black shrink-0 coming-soon-badge"
             style={{ fontSize: "0.45rem" }}
           >
-            SOON
+            2026
           </span>
         ) : (
           <span
@@ -127,8 +156,36 @@ function ReleaseCard({
         {release.description}
       </p>
 
-      {/* Stream button */}
-      {release.status === "AVAILABLE" ? (
+      {/* Follow CTA for coming soon, stream button for available */}
+      {isComingSoon ? (
+        <div className="flex flex-col gap-2 mt-auto">
+          <div
+            className="font-pixel text-center py-2 px-3 text-arcade-black"
+            style={{
+              fontSize: "0.5rem",
+              background: "repeating-linear-gradient(45deg, #FFD700 0px, #FFD700 6px, #ff8c00 6px, #ff8c00 12px)",
+              letterSpacing: "0.1em",
+            }}
+          >
+            [ DROPPING LATER THIS YEAR ]
+          </div>
+          <a
+            href={release.streamUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-pixel text-center py-2 px-3 transition-all hover:bg-arcade-yellow hover:text-arcade-black"
+            style={{
+              fontSize: "0.5rem",
+              color: "#FFD700",
+              boxShadow:
+                "0 -2px 0 0 #FFD700, 0 2px 0 0 #FFD700, -2px 0 0 0 #FFD700, 2px 0 0 0 #FFD700, -2px -2px 0 0 #FFD700, 2px -2px 0 0 #FFD700, -2px 2px 0 0 #FFD700, 2px 2px 0 0 #FFD700",
+              letterSpacing: "0.1em",
+            }}
+          >
+            [ FOLLOW ON SPOTIFY ]
+          </a>
+        </div>
+      ) : (
         <a
           href={release.streamUrl}
           target="_blank"
@@ -138,16 +195,6 @@ function ReleaseCard({
         >
           [ STREAM NOW ]
         </a>
-      ) : (
-        <div
-          className="font-pixel text-center py-2 px-3 text-arcade-black"
-          style={{
-            fontSize: "0.55rem",
-            background: "repeating-linear-gradient(45deg, #FFD700 0px, #FFD700 4px, #ff8c00 4px, #ff8c00 8px)",
-          }}
-        >
-          [ COMING SOON ]
-        </div>
       )}
     </div>
   );
