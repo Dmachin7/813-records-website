@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 813 Records Website
+
+Retro arcade-style website for 813 Records — independent hip-hop & R&B imprint based in Tampa, Florida.
+
+**Built with:** Next.js 14 (App Router) · TypeScript · Tailwind CSS · Google Fonts (Press Start 2P + VT323)
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- npm
+
+### Install & Run Locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then visit [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Build for Production
 
-## Learn More
+```bash
+npm run build
+npm start
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deploy to Vercel
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Option 1 — Vercel CLI
 
-## Deploy on Vercel
+```bash
+npm i -g vercel
+vercel
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Follow the prompts. Vercel will auto-detect Next.js and configure the build.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Option 2 — GitHub + Vercel Dashboard
+
+1. Push this repo to GitHub
+2. Go to [vercel.com](https://vercel.com) → **Add New Project**
+3. Import the repository
+4. Vercel auto-detects Next.js — click **Deploy**
+
+No environment variables required.
+
+---
+
+## Project Structure
+
+```
+website/
+├── app/
+│   ├── layout.tsx       # Root layout + Google Fonts
+│   ├── page.tsx         # Main page (assembles all sections)
+│   └── globals.css      # Retro CSS animations & effects
+├── components/
+│   ├── LoadingScreen.tsx  # Boot sequence loader (0→100%)
+│   ├── Marquee.tsx        # Scrolling yellow ticker
+│   ├── Header.tsx         # Sticky nav with neon logo
+│   ├── Hero.tsx           # Matrix rain + CRT scanlines hero
+│   ├── About.tsx          # Imprint info + count-up stats
+│   ├── Artists.tsx        # TR + Prince Kreed cards
+│   ├── Releases.tsx       # Release catalog grid
+│   └── Footer.tsx         # Social links + branding
+├── vercel.json
+└── tailwind.config.ts
+```
+
+---
+
+## Artists
+
+| Artist | Spotify | Apple Music | Instagram |
+|--------|---------|-------------|-----------|
+| TR | [Link](https://open.spotify.com/artist/0tH9WH9RrwIiuoNHcUqmXf) | [Link](https://music.apple.com/us/artist/tr/1634826910) | [@tr_tpa](https://www.instagram.com/tr_tpa) |
+| Prince Kreed | [Link](https://open.spotify.com/artist/4nbBP1Y7ZGajRoMiBonII8) | [Link](https://music.apple.com/us/artist/prince-kreed/1481045754) | [@prince_kreed](https://www.instagram.com/prince_kreed/) |
+
+---
+
+© 2026 813 Records. Independently Operated.

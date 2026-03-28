@@ -2,26 +2,393 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ─── Keyframes (defined here so they're always in CSS regardless of Tailwind class usage) ── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes neonPulse {
+  0%, 100% { text-shadow: 0 0 4px #FFD700, 0 0 8px #FFD700, 0 0 16px rgba(255,215,0,0.4); }
+  50%       { text-shadow: 0 0 8px #FFD700, 0 0 16px #FFD700, 0 0 32px #FFD700, 0 0 64px #FFD700, 0 0 100px rgba(255,215,0,0.4); }
+}
+@keyframes scanLine {
+  0%   { transform: translateY(-100%); opacity: 0.3; }
+  100% { transform: translateY(100vh); opacity: 0.3; }
+}
+@keyframes floatUp {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+@keyframes pixelPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,215,0,0.5); }
+  50%       { box-shadow: 0 0 0 10px rgba(255,215,0,0); }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ─── Root Variables ──────────────────────────────────────────────────────── */
+:root {
+  --background: #0a0a0a;
+  --foreground: #ffffff;
+  --yellow: #FFD700;
+  --gray: #1a1a1a;
+}
+
+/* ─── Base Reset ──────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #0a0a0a;
+  color: #ffffff;
+  overflow-x: hidden;
+  cursor: default;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+/* ─── Scrollbar Styling ───────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+::-webkit-scrollbar-thumb {
+  background: #FFD700;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #fff;
+}
+
+/* ─── Pixel Border ────────────────────────────────────────────────────────── */
+.pixel-border {
+  box-shadow:
+    0 -4px 0 0 #FFD700,
+    0  4px 0 0 #FFD700,
+   -4px 0 0 0 #FFD700,
+    4px 0 0 0 #FFD700,
+   -4px -4px 0 0 #FFD700,
+    4px -4px 0 0 #FFD700,
+   -4px  4px 0 0 #FFD700,
+    4px  4px 0 0 #FFD700;
+}
+
+.pixel-border-sm {
+  box-shadow:
+    0 -2px 0 0 #FFD700,
+    0  2px 0 0 #FFD700,
+   -2px 0 0 0 #FFD700,
+    2px 0 0 0 #FFD700,
+   -2px -2px 0 0 #FFD700,
+    2px -2px 0 0 #FFD700,
+   -2px  2px 0 0 #FFD700,
+    2px  2px 0 0 #FFD700;
+}
+
+.pixel-border-white {
+  box-shadow:
+    0 -4px 0 0 #ffffff,
+    0  4px 0 0 #ffffff,
+   -4px 0 0 0 #ffffff,
+    4px 0 0 0 #ffffff,
+   -4px -4px 0 0 #ffffff,
+    4px -4px 0 0 #ffffff,
+   -4px  4px 0 0 #ffffff,
+    4px  4px 0 0 #ffffff;
+}
+
+/* ─── Glow Effects ────────────────────────────────────────────────────────── */
+.glow-yellow {
+  box-shadow: 0 0 10px #FFD700, 0 0 20px rgba(255,215,0,0.4);
+}
+
+.glow-hover {
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+.glow-hover:hover {
+  box-shadow: 0 0 20px #FFD700, 0 0 40px rgba(255,215,0,0.4), 0 0 60px rgba(255,215,0,0.2);
+  transform: translateY(-2px);
+}
+
+/* ─── Neon Text ───────────────────────────────────────────────────────────── */
+.neon-text {
+  color: #FFD700;
+  text-shadow:
+    0 0 4px #FFD700,
+    0 0 8px #FFD700,
+    0 0 16px #FFD700,
+    0 0 32px rgba(255,215,0,0.5);
+}
+
+.neon-text-white {
+  color: #ffffff;
+  text-shadow:
+    0 0 4px #ffffff,
+    0 0 8px rgba(255,255,255,0.6),
+    0 0 16px rgba(255,255,255,0.3);
+}
+
+/* ─── Scanlines Overlay ───────────────────────────────────────────────────── */
+.scanlines {
+  position: relative;
+}
+.scanlines::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.08) 2px,
+    rgba(0, 0, 0, 0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ─── CRT Vignette ────────────────────────────────────────────────────────── */
+.crt-vignette {
+  position: relative;
+}
+.crt-vignette::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 60%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ─── Pixel Divider ───────────────────────────────────────────────────────── */
+.pixel-divider {
+  height: 4px;
+  background: repeating-linear-gradient(
+    90deg,
+    #FFD700 0px, #FFD700 8px,
+    transparent 8px, transparent 12px
+  );
+}
+
+.pixel-divider-sm {
+  height: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    #FFD700 0px, #FFD700 4px,
+    transparent 4px, transparent 8px
+  );
+}
+
+/* ─── Section Headers ─────────────────────────────────────────────────────── */
+.section-header {
+  font-family: var(--font-pixel), monospace;
+  color: #FFD700;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+}
+
+/* ─── Arcade Button ───────────────────────────────────────────────────────── */
+.arcade-btn {
+  display: inline-block;
+  font-family: var(--font-pixel), monospace;
+  font-size: 0.6rem;
+  color: #FFD700;
+  background: transparent;
+  border: none;
+  padding: 10px 16px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+  box-shadow:
+    0 -2px 0 0 #FFD700,
+    0  2px 0 0 #FFD700,
+   -2px 0 0 0 #FFD700,
+    2px 0 0 0 #FFD700,
+   -2px -2px 0 0 #FFD700,
+    2px -2px 0 0 #FFD700,
+   -2px  2px 0 0 #FFD700,
+    2px  2px 0 0 #FFD700;
+}
+.arcade-btn:hover {
+  background: #FFD700;
+  color: #0a0a0a;
+  box-shadow:
+    0 -2px 0 0 #FFD700,
+    0  2px 0 0 #FFD700,
+   -2px 0 0 0 #FFD700,
+    2px 0 0 0 #FFD700,
+   -2px -2px 0 0 #FFD700,
+    2px -2px 0 0 #FFD700,
+   -2px  2px 0 0 #FFD700,
+    2px  2px 0 0 #FFD700,
+    0 0 20px #FFD700,
+    0 0 40px rgba(255,215,0,0.5);
+}
+.arcade-btn:active {
+  transform: translate(1px, 1px);
+}
+
+/* ─── Glitch Text ─────────────────────────────────────────────────────────── */
+.glitch-text {
+  position: relative;
+}
+.glitch-text:hover {
+  animation: glitchHover 0.3s steps(2) infinite;
+}
+@keyframes glitchHover {
+  0%  { text-shadow: 2px 0 #ff0000, -2px 0 #00ffff; transform: translate(0); }
+  25% { text-shadow: -2px 0 #ff0000, 2px 0 #00ffff; transform: translate(-2px, 1px); }
+  50% { text-shadow: 2px 0 #00ffff, -2px 0 #ff0000; transform: translate(2px, -1px); }
+  75% { text-shadow: -2px 0 #00ffff, 2px 0 #ff0000; transform: translate(-1px, 2px); }
+  100%{ text-shadow: 2px 0 #ff0000, -2px 0 #00ffff; transform: translate(0); }
+}
+
+/* ─── Loading Bar ─────────────────────────────────────────────────────────── */
+.loading-bar-track {
+  width: 100%;
+  height: 12px;
+  background: #1a1a1a;
+  box-shadow:
+    0 -2px 0 0 #FFD700,
+    0  2px 0 0 #FFD700,
+   -2px 0 0 0 #FFD700,
+    2px 0 0 0 #FFD700;
+}
+.loading-bar-fill {
+  height: 100%;
+  background: repeating-linear-gradient(
+    90deg,
+    #FFD700 0px, #FFD700 8px,
+    #ff8c00 8px, #ff8c00 12px
+  );
+  transition: width 0.05s linear;
+  box-shadow: 0 0 10px rgba(255,215,0,0.6);
+}
+
+/* ─── Card Base ───────────────────────────────────────────────────────────── */
+.pixel-card {
+  background: #1a1a1a;
+  padding: 1.5rem;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+  box-shadow:
+    0 -4px 0 0 #FFD700,
+    0  4px 0 0 #FFD700,
+   -4px 0 0 0 #FFD700,
+    4px 0 0 0 #FFD700,
+   -4px -4px 0 0 #FFD700,
+    4px -4px 0 0 #FFD700,
+   -4px  4px 0 0 #FFD700,
+    4px  4px 0 0 #FFD700;
+}
+.pixel-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 -4px 0 0 #FFD700,
+    0  4px 0 0 #FFD700,
+   -4px 0 0 0 #FFD700,
+    4px 0 0 0 #FFD700,
+   -4px -4px 0 0 #FFD700,
+    4px -4px 0 0 #FFD700,
+   -4px  4px 0 0 #FFD700,
+    4px  4px 0 0 #FFD700,
+    0 0 20px rgba(255,215,0,0.5),
+    0 0 40px rgba(255,215,0,0.2);
+}
+
+/* ─── Animated Underline ──────────────────────────────────────────────────── */
+.pixel-underline {
+  position: relative;
+}
+.pixel-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #FFD700;
+  transition: width 0.3s ease;
+}
+.pixel-underline:hover::after {
+  width: 100%;
+}
+
+/* ─── Matrix Canvas ───────────────────────────────────────────────────────── */
+.matrix-canvas {
+  position: absolute;
+  inset: 0;
+  opacity: 0.15;
+  z-index: 0;
+}
+
+/* ─── Stat Number Animation ───────────────────────────────────────────────── */
+.stat-number {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── Utility: Opacity 0 start for scroll animations ─────────────────────── */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.animate-on-scroll.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── Coming Soon Badge ───────────────────────────────────────────────────── */
+.coming-soon-badge {
+  animation: comingSoonPulse 2s ease-in-out infinite;
+}
+@keyframes comingSoonPulse {
+  0%, 100% { background: #FFD700; color: #0a0a0a; }
+  50% { background: #ff8c00; color: #0a0a0a; box-shadow: 0 0 10px #FFD700; }
+}
+
+/* ─── Marquee Container ───────────────────────────────────────────────────── */
+.marquee-container {
+  overflow: hidden;
+  white-space: nowrap;
+}
+.marquee-text {
+  display: inline-block;
+  animation: marqueeScroll 30s linear infinite;
+}
+@keyframes marqueeScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ─── Nav Pixel Hover ─────────────────────────────────────────────────────── */
+.nav-link {
+  position: relative;
+  transition: color 0.2s;
+}
+.nav-link::before {
+  content: '> ';
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.nav-link:hover::before {
+  opacity: 1;
+}
+
+/* ─── Hero Title Shadow ───────────────────────────────────────────────────── */
+.hero-title-shadow {
+  text-shadow:
+    4px 4px 0 rgba(255, 215, 0, 0.3),
+    8px 8px 0 rgba(255, 215, 0, 0.1);
+}
+
+/* ─── Responsive font-size helpers ───────────────────────────────────────── */
+@media (max-width: 640px) {
+  .pixel-text-hero { font-size: 1.2rem !important; }
+  .pixel-text-lg { font-size: 0.7rem !important; }
 }
